@@ -94,8 +94,8 @@ public class GankDataAdapter extends BaseMultiItemQuickAdapter<GankData, BaseVie
             return;
         }
         int position = viewHelper.viewHolder.getAdapterPosition() + 1;
-        if (position < mData.size() && gankData.getItemType() == GankData.TYPE_WITHOUT_IMAGE
-                && (mData.get(position).getItemType() == GankData.TYPE_WITHOUT_IMAGE)) {
+        if (position < getData().size() && gankData.getItemType() == GankData.TYPE_WITHOUT_IMAGE
+                && (getData().get(position).getItemType() == GankData.TYPE_WITHOUT_IMAGE)) {
             viewHelper.border_view.setVisibility(View.VISIBLE);
         } else {
             viewHelper.border_view.setVisibility(View.GONE);
