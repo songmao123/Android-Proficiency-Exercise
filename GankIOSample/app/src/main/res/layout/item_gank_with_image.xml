@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/width_image_item_height">
+    <!--android:background="?android:attr/selectableItemBackground"-->
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/width_image_bottom_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorItemBg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/desc_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="随着Android引入Java8的一些功能，建议所有开发者，取图片的时候，只取适合自己当前尺寸的图片，以帮助 Gank 节省图片流量开支 "
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/text_size_14sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/margin_10dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:id="@+id/author_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="via Chen MuLong"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_12sp" />
+
+            <TextView
+                android:id="@+id/publish_time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="2016-11-23"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_12sp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/indicator_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/margin_10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/margin_10dp"
+        android:orientation="horizontal" />
+
+</RelativeLayout>

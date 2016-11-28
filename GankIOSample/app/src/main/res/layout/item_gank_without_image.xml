@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/desc_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/relativeLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/relativeLayout"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="随着Android引入Java8的一些功能，建议所有开发者，取图片的时候，只取适合自己当前尺寸的图片，以帮助 Gank 节省图片流量开支 "
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_14sp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
+
+        <TextView
+            android:id="@+id/author_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="via Chen MuLong"
+            android:textColor="@color/colorBlackHint"
+            android:textSize="@dimen/text_size_12sp" />
+
+        <TextView
+            android:id="@+id/publish_time_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="2016-11-23"
+            android:textColor="@color/colorBlackHint"
+            android:textSize="@dimen/text_size_12sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/border_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_1dp"
+        android:background="@color/colorBorder" />
+
+</LinearLayout>
