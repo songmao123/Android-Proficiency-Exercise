@@ -61,4 +61,8 @@ public class Util {
         return (int)(dipValue * scale + 0.5f);
     }
 
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
 }

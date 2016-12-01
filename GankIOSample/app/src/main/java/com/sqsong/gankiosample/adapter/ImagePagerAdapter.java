@@ -37,13 +37,18 @@ public class ImagePagerAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(188));
         view.setLayoutParams(params);
-        String imageUrl = mImageList.get(position);
 
-        // Glide can load gif image;
-//        Glide.with(mContext).load(imageUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        // 图片宽度为屏幕宽度
+        int imageWidth = Util.getScreenWidth();
+        // 根据比例计算出需要获取的图片的高度
+        int imageHeight = imageWidth * 188 / 360;
+        // 根据七牛api获取相应尺寸的图片
+        String imageUrl = new StringBuffer().append(mImageList.get(position))
+                .append("?imageView2/2/w/")
+                .append(imageWidth)
+                .append("/h/")
+                .append(imageHeight).toString();
         Glide.with(mContext).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(imageView));
-
-        // Picasso.with(mContext).load(imageUrl).into(imageView);
         container.addView(view);
         return view;
     }
