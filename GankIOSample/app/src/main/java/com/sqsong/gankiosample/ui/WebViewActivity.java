@@ -50,7 +50,8 @@ public class WebViewActivity extends AppCompatActivity implements SwipeRefreshLa
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         swipe_layout = (SwipeRefreshLayout) findViewById(R.id.swipe_layout);
-        webView = (WebView) findViewById(R.id.webView);
+        webView = new WebView(getApplicationContext());
+        swipe_layout.addView(webView);
     }
 
     private void initEvents() {
@@ -97,6 +98,7 @@ public class WebViewActivity extends AppCompatActivity implements SwipeRefreshLa
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
+            mWebUrl = url;
             swipe_layout.setRefreshing(false);
             String title = view.getTitle();
             if (!TextUtils.isEmpty(title)) {
@@ -119,5 +121,12 @@ public class WebViewActivity extends AppCompatActivity implements SwipeRefreshLa
            }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        swipe_layout.removeAllViews();
+        webView.destroy();
     }
 }

@@ -2,11 +2,15 @@ package com.sqsong.gankiosample.network;
 
 import com.sqsong.gankiosample.BaseApplication;
 import com.sqsong.gankiosample.BuildConfig;
+import com.sqsong.gankiosample.db.DatabaseManager;
 import com.sqsong.gankiosample.model.GankBean;
+import com.sqsong.gankiosample.model.GankData;
+import com.sqsong.gankiosample.ui.GankPostFragment;
 import com.sqsong.gankiosample.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -20,6 +24,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Created by 青松 on 2016/11/24.
@@ -98,16 +104,29 @@ public class RetrofitInstance {
                 .build();
     }
 
-    public Observable<GankBean> getAndroidData(int pageIndex) {
-        return apiService.getAndroidData(pageIndex);
+    public Observable<GankBean> getObservable(int type, int pageIndex) {
+        if (type == GankPostFragment.TYPE_ANDROID) {
+            return apiService.getAndroidData(pageIndex);
+        } else if (type == GankPostFragment.TYPE_IOS) {
+            return apiService.getIOSData(pageIndex);
+        } else {
+            return apiService.getWebData(pageIndex);
+        }
     }
 
-    public Observable<GankBean> getIOSData(int pageIndex) {
-        return apiService.getIOSData(pageIndex);
-    }
-
-    public Observable<GankBean> getWebData(int pageIndex) {
-        return apiService.getWebData(pageIndex);
+    public Observable<List<GankData>> getPostObservable(int type, int pageIndex) {
+        return getObservable(type, pageIndex).map(new Func1<GankBean, List<GankData>>() {
+            @Override
+            public List<GankData> call(GankBean gankBean) {
+                return gankBean == null ? null : gankBean.getResults();
+            }
+        }).doOnNext(new Action1<List<GankData>>() {
+            @Override
+            public void call(List<GankData> gankDatas) {
+                // network data cache to database
+                DatabaseManager.getInstance(BaseApplication.getAppContext()).insertGankData(gankDatas);
+            }
+        });
     }
 
 }

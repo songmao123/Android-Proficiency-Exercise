@@ -93,8 +93,8 @@ public class CirclePagerIndicator extends View {
         }
 
         int nextPosition = Math.min(mCirclePoints.size() - 1, position + 1);
-        PointF current = mCirclePoints.get(position);
-        PointF next = mCirclePoints.get(nextPosition);
+        PointF current = mCirclePoints.get(position % mCirclePoints.size());
+        PointF next = mCirclePoints.get(nextPosition % mCirclePoints.size());
 
         mIndicatorX = current.x + (next.x - current.x) * mStartInterpolator.getInterpolation(positionOffset);
         invalidate();

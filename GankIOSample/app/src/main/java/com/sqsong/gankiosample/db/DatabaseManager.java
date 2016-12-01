@@ -2,16 +2,19 @@ package com.sqsong.gankiosample.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.sqsong.gankiosample.model.DaoMaster;
 import com.sqsong.gankiosample.model.DaoSession;
 import com.sqsong.gankiosample.model.GankData;
 import com.sqsong.gankiosample.model.GankDataDao;
+import com.sqsong.gankiosample.ui.GankPostFragment;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by 青松 on 2016/11/25.
@@ -71,9 +74,9 @@ public class DatabaseManager {
         GankDataDao gankDataDao = daoSession.getGankDataDao();
         QueryBuilder<GankData> builder = gankDataDao.queryBuilder();
         String queryType;
-        if (type == 0) {
+        if (type == GankPostFragment.TYPE_ANDROID) {
             queryType = TYPE_ANDROID;
-        } else if (type == 1) {
+        } else if (type == GankPostFragment.TYPE_IOS) {
             queryType = TYPE_IOS;
         } else {
             queryType = TYPE_WEB;
@@ -85,19 +88,15 @@ public class DatabaseManager {
         return builder.list();
     }
 
-    public List<GankData> queryAndroidDataWithLimit(int page, int pageSize) {
-        long startTime = System.currentTimeMillis();
-        List<GankData> gankDatas = queryDataWithLimit(0, page, pageSize);
-        Log.e("sqsong", "Query cost time: " + (System.currentTimeMillis() - startTime) + "ms");
-        return gankDatas;
-    }
-
-    public List<GankData> queryIOSDataWithLimit(int page, int pageSize) {
-        return queryDataWithLimit(1, page, pageSize);
-    }
-
-    public List<GankData> queryWebDataWithLimit(int page, int pageSize) {
-        return queryDataWithLimit(2, page, pageSize);
+    public Observable<List<GankData>> getCachePostObservable(final int type, final int page, final int pageSize) {
+        return Observable.create(new Observable.OnSubscribe<List<GankData>>() {
+            @Override
+            public void call(Subscriber<? super List<GankData>> subscriber) {
+                List<GankData> gankDatas = queryDataWithLimit(type, page, pageSize);
+                subscriber.onNext(gankDatas);
+                subscriber.onCompleted();
+            }
+        });
     }
 
     /**
@@ -105,6 +104,8 @@ public class DatabaseManager {
      * @param gankDatas gank data lists.
      */
     public void insertGankData(List<GankData> gankDatas) {
+        if (gankDatas == null || gankDatas.size() < 1) return;
+
         DaoMaster daoMaster = new DaoMaster(getWriteableDataBase());
         DaoSession daoSession = daoMaster.newSession();
         GankDataDao gankDataDao = daoSession.getGankDataDao();

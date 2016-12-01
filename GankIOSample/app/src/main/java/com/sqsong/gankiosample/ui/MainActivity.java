@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
 import com.sqsong.gankiosample.R;
 import com.sqsong.gankiosample.adapter.SimpleFragmentAdapter;
 
@@ -45,12 +46,9 @@ public class MainActivity extends AppCompatActivity {
         mTabTitles.add(getString(R.string.text_ios));
         mTabTitles.add(getString(R.string.text_web));
 
-        AndroidFragment androidFragment = new AndroidFragment();
-        IOSFragment iosFragment = new IOSFragment();
-        WebFragment webFragment = new WebFragment();
-        mFragments.add(androidFragment);
-        mFragments.add(iosFragment);
-        mFragments.add(webFragment);
+        mFragments.add(GankPostFragment.newInstance(GankPostFragment.TYPE_ANDROID));
+        mFragments.add(GankPostFragment.newInstance(GankPostFragment.TYPE_IOS));
+        mFragments.add(GankPostFragment.newInstance(GankPostFragment.TYPE_WEB));
     }
 
     private void initEvents() {
@@ -75,4 +73,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Glide.get(this).clearMemory();
+    }
 }

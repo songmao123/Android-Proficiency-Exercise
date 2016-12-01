@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sqsong.gankiosample.R;
 import com.sqsong.gankiosample.util.Util;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,9 +40,10 @@ public class ImagePagerAdapter extends PagerAdapter {
         String imageUrl = mImageList.get(position);
 
         // Glide can load gif image;
-        // Glide.with(mContext).load(imageUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.NONE).into(imageView);
+//        Glide.with(mContext).load(imageUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(imageView);
+        Glide.with(mContext).load(imageUrl).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(new GlideDrawableImageViewTarget(imageView));
 
-        Picasso.with(mContext).load(imageUrl).into(imageView);
+        // Picasso.with(mContext).load(imageUrl).into(imageView);
         container.addView(view);
         return view;
     }

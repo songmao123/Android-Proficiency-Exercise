@@ -3,7 +3,6 @@
     <string name="action_search">Search</string>
     <string name="title_name">Gank.io</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_android">Android</string>
     <string name="text_ios">iOS</string>
@@ -12,4 +11,5 @@
     <string name="loading_more">加载更多...</string>
     <string name="loading_complete">数据加载完毕</string>
     <string name="loading_failure">数据加载失败</string>
+    <string name="empty_data">木有数据啦~~</string>
 </resources>

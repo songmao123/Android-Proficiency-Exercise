@@ -1,7 +1,9 @@
 package com.sqsong.gankiosample.adapter;
 
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
@@ -10,7 +12,9 @@ import com.sqsong.gankiosample.R;
 import com.sqsong.gankiosample.model.GankData;
 import com.sqsong.gankiosample.util.Util;
 import com.sqsong.gankiosample.view.CirclePagerIndicator;
+import com.sqsong.gankiosample.view.FixedSpeedScroller;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -19,7 +23,8 @@ import java.util.List;
 
 public class GankDataAdapter extends BaseMultiItemQuickAdapter<GankData, BaseViewHolder> {
 
-    private List<GankData> mData;
+    private static final int AUTO_SCROLL_DURATION = 3000;
+    private Handler mHandler = new Handler();
 
     public GankDataAdapter(List<GankData> data) {
         super(data);
@@ -42,11 +47,13 @@ public class GankDataAdapter extends BaseMultiItemQuickAdapter<GankData, BaseVie
         }
     }
 
-    /** set the item data with image */
-    private void processWithImageData(GankViewHolder viewHelper, GankData gankData) {
+    /**
+     * set the item data with image
+     */
+    private void processWithImageData(final GankViewHolder viewHelper, GankData gankData) {
         setGankData(viewHelper, gankData);
 
-        List<String> imageList = gankData.getImages();
+        final List<String> imageList = gankData.getImages();
         if (imageList == null) return;
 
         ImagePagerAdapter imageAdapter = new ImagePagerAdapter(mContext, imageList);
@@ -59,24 +66,21 @@ public class GankDataAdapter extends BaseMultiItemQuickAdapter<GankData, BaseVie
             indicator.setCircleCount(imageList.size());
             indicator.setNormalColor(mContext.getResources().getColor(R.color.colorNormalIndicator));
             indicator.setFocusColor(mContext.getResources().getColor(R.color.colorWhite));
-            //将导航圆点添加到圆点容器中
+            // add circle indicator
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             viewHelper.indicator_ll.addView(indicator, lp);
-            viewHelper.viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                    //关联ViewPager
-                    indicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                }
+            viewHelper.viewpager.addOnPageChangeListener(new ViewPagerPageChangeListener(indicator));
 
+            // add image loop
+            mHandler.postDelayed(new Runnable() {
                 @Override
-                public void onPageSelected(int position) {
+                public void run() {
+                    int currentItem = viewHelper.viewpager.getCurrentItem();
+                    viewHelper.viewpager.setCurrentItem((currentItem + 1) % (imageList.size()));
+                    mHandler.postDelayed(this, AUTO_SCROLL_DURATION);
                 }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                }
-            });
+            }, AUTO_SCROLL_DURATION);
+            setViewPagerScrollDuration(viewHelper.viewpager);
         } else {
             viewHelper.indicator_ll.setVisibility(View.GONE);
         }
@@ -99,6 +103,44 @@ public class GankDataAdapter extends BaseMultiItemQuickAdapter<GankData, BaseVie
             viewHelper.border_view.setVisibility(View.VISIBLE);
         } else {
             viewHelper.border_view.setVisibility(View.GONE);
+        }
+    }
+
+    /** set the duration of viewpager scroll to current page to next page */
+    public void setViewPagerScrollDuration(ViewPager viewPager) {
+        try {
+            Field mField = ViewPager.class.getDeclaredField("mScroller");
+            mField.setAccessible(true);
+            FixedSpeedScroller mScroller = new FixedSpeedScroller(
+                    viewPager.getContext(), new AccelerateInterpolator());
+            mScroller.setmDuration(400);
+            mField.set(viewPager, mScroller);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class ViewPagerPageChangeListener implements ViewPager.OnPageChangeListener {
+
+        private CirclePagerIndicator mIndicator;
+
+        public ViewPagerPageChangeListener(CirclePagerIndicator indicator) {
+            this.mIndicator = indicator;
+        }
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            mIndicator.onPageScrolled(position, positionOffset, positionOffsetPixels);
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
         }
     }
 
